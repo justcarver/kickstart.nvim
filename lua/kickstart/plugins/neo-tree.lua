@@ -22,4 +22,25 @@ return {
       },
     },
   },
+  init = function()
+    if vim.fn.argc(-1) == 1 then
+      local stat = vim.loop.fs_stat(vim.fn.argv(0))
+      if stat and stat.type == 'directory' then
+        require('neo-tree').setup {
+          filesystem = {
+            hijack_netrw_behavior = 'open_current',
+          },
+        }
+      end
+    end
+  end,
+  event_handlers = {
+    {
+      event = 'file_opened',
+      handler = function(file_path)
+        --auto close
+        require('neo-tree').close_all()
+      end,
+    },
+  },
 }
